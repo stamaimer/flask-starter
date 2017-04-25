@@ -18,13 +18,13 @@ from . import AppModel
 
 class User(AppModel, UserMixin):
 
-    email = db.Column(db.String(256), nullable=False, unique=True)
+    email = db.Column(db.String(128), nullable=False, unique=True)
 
     active = db.Column(db.Boolean, default=True)
 
-    username = db.Column(db.String(256), nullable=False, unique=True)
+    username = db.Column(db.String(128), nullable=False, unique=True)
 
-    password = db.Column(db.String(256), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
 
     roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users", lazy="dynamic"))
 

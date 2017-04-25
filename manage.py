@@ -38,7 +38,7 @@ def create_db():
 
     try:
 
-        if click.confirm("This command will destroy current database and all data in it."
+        if click.confirm("This command will destroy current database and all data in it. "
                          "Do you want to continue?",
                          default=False):
 

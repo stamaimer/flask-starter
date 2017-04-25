@@ -18,9 +18,9 @@ from . import AppModel
 
 class Role(AppModel, RoleMixin):
 
-    name = db.Column(db.String(256), nullable=False, unique=True)
+    name = db.Column(db.String(128), nullable=False, unique=True)
 
-    description = db.Column(db.String(256))
+    description = db.Column(db.String(128))
 
     def __repr__(self):
 
