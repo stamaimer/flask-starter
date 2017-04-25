@@ -1,2 +1,6 @@
 .venv
 .idea
+
+*.pyc
+
+instance/config.py

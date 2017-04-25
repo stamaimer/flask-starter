@@ -42,4 +42,4 @@ from .user import UserModelView
 
 admin.add_view(RoleModelView(Role, db.session, name="Role"))
 admin.add_view(UserModelView(User, db.session, name="User"))
-# admin.add_view(AppFileAdmin())
+admin.add_view(AppFileAdmin("app/static", "/static/", name="Static Files"))

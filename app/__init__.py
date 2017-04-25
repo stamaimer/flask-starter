@@ -18,10 +18,10 @@ import flask
 extensions = [
     "app.model:db",
     "app.admin:admin",
-    "app.extension:cors",
-    "app.extension:babel",
-    "app.extension:sentry",
-    "app.extension:security",
+    "app.extension.cors:cors",
+    "app.extension.babel:babel",
+    # "app.extension.sentry:sentry",
+    "app.extension.security:security",
 ]
 
 blueprints = [
