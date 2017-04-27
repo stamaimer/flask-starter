@@ -1,6 +1,8 @@
 .venv
 .idea
 
+.DS_Store
+
 *.pyc
 
 instance/config.py

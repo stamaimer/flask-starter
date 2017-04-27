@@ -10,6 +10,8 @@
 """
 
 
+from flask import current_app
+
 from flask_security import UserMixin
 
 from . import db, roles_users
@@ -27,6 +29,22 @@ class User(AppModel, UserMixin):
     password = db.Column(db.String(128), nullable=False)
 
     roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users", lazy="dynamic"))
+
+    if current_app.config["SECURITY_TRACKABLE"]:
+
+        login_count = db.Column(db.Integer)
+
+        last_login_at = db.Column(db.DateTime)
+
+        last_login_ip = db.Column(db.String(15))
+
+        current_login_at = db.Column(db.DateTime)
+
+        current_login_ip = db.Column(db.String(15))
+
+    if current_app.config["SECURITY_CONFIRMABLE"]:
+
+        confirmed_at = db.Column(db.DateTime)
 
     def __repr__(self):
 

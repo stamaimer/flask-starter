@@ -34,6 +34,10 @@ class AppModel(db.Model):
 
         db.session.commit()
 
+    def to_dict(self):
+
+        pass
+
 
 roles_users = db.Table("roles_users",
                        db.Column("role_id", db.Integer, db.ForeignKey("role.id")),
