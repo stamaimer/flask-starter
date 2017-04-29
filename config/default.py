@@ -14,17 +14,7 @@ class DefaultConfig(object):
 
     DEBUG = True
 
-    SECURITY_TRACKABLE = False
-
-    SECURITY_CHANGEABLE = False
-
-    SECURITY_CONFIRMABLE = False
-
-    SECURITY_RECOVERABLE = False
-
-    SECURITY_PASSWORDLESS = False
-
-    SECURITY_REGISTERABLE = False
+    SENTRY_USER_ATTRS = ["email", "username"]
 
     SECURITY_PASSWORD_HASH = "bcrypt"
 
