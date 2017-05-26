@@ -52,11 +52,11 @@ def delete_db():
 
         pass
 
-    finally:
-
-        cursor.close()
-
-        connection.close()
+    # finally:
+    #
+    #     cursor.close()
+    #
+    #     connection.close()
 
 
 @manager.command
@@ -77,11 +77,11 @@ def create_db():
 
         pass
 
-    finally:
-
-        cursor.close()
-
-        connection.close()
+    # finally:
+    #
+    #     cursor.close()
+    #
+    #     connection.close()
 
 
 @manager.command
