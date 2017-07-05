@@ -20,7 +20,7 @@
     </head>
     <body style="padding-top: 70px">
         <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container-fluid">
+            <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
@@ -31,10 +31,10 @@
                     <a class="navbar-brand" href="/">在线答题</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{{ url_for_security('login') }}">登录</a></li>
-                        <li><a href="{{ url_for_security('register') }}">注册</a></li>
-                    </ul>
+                    <form class="navbar-form navbar-right">
+                        <a href="{{ url_for_security('login') }}" class="btn btn-success btn-sm" role="button">登录</a>
+                        <a href="{{ url_for_security('register') }}" class="btn btn-default btn-sm" role="button">注册</a>
+                    </form>
                 </div>
             </div>
         </nav>
