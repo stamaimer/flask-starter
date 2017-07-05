@@ -12,12 +12,16 @@
 
 import flask
 
+from flask import render_template
+
+from flask_security import login_required
+
 
 main = flask.Blueprint("main", __name__)
 
 
 @main.route('/')
-@main.route("/index")
 def index():
 
-    return "Hello, Flask Starter!"
+    return render_template("index.html")
+

@@ -1,5 +1,8 @@
 .venv
 .idea
+.vscode
+
+flask_session
 
 .DS_Store
 

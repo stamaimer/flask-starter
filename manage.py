@@ -15,16 +15,20 @@ import pymysql
 from flask import current_app
 
 from flask_script import Manager
-from flask_migrate import MigrateCommand
+from flask_migrate import Migrate, MigrateCommand
 
 from app.model import db
 
 from app import create_app, model
 
 
-manager = Manager(create_app)
+app = create_app("config.DefaultConfig")
 
-manager.add_option("-c", "--config", dest="config_name", required=True)
+manager = Manager(app)
+
+# manager.add_option("-c", "--config", dest="config_name", required=True)
+
+migrate = Migrate(app, db)
 
 manager.add_command("db", MigrateCommand)
 

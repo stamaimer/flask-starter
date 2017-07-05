@@ -46,3 +46,5 @@ roles_users = db.Table("roles_users",
 
 from .role import Role
 from .user import User
+from .answer import Answer
+from .question import Question
