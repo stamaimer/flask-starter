@@ -10,18 +10,70 @@
 """
 
 
+import traceback
+
 import flask
 
-from flask import render_template
+from flask import abort, current_app, jsonify, render_template, request
 
-from flask_security import login_required
+from flask_security import current_user, login_required
+
+from app.model import db, Answer, Question
 
 
 main = flask.Blueprint("main", __name__)
 
 
+@main.app_errorhandler(500)
+def not_found(e):
+
+    return e.description.decode("utf-8"), 500, {"content-type": "text/plain; charset=utf-8"}
+
+
 @main.route('/')
 def index():
 
-    return render_template("index.html")
+    question = Question.query.filter_by(status=1).order_by(Question.create_datetime.desc()).first()
 
+    return render_template("index.html", question_id=question.id)
+
+
+@main.route("/answer", methods=["POST"])
+@login_required
+def create_answer():
+
+    try:
+
+        request_json = request.form
+
+        print request.get_data()
+
+        answer = request_json.get("answer")
+
+        question_id = request_json.get("question_id")
+
+        print answer, question_id
+
+        question = Question.query.filter_by(status=1).order_by(Question.create_datetime.desc()).first()
+
+        if question.id == question_id:
+
+            answer = Answer(answer, current_user.id, question_id)
+
+            answer.save()
+
+            data_dict = dict(answer_id=answer.id)
+
+            return jsonify(data_dict)
+
+        else:
+
+            return "Bad Request", 400
+
+    except:
+
+        db.session.rollback()
+
+        current_app.logger.error(traceback.format_exc())
+
+        abort(500, traceback.format_exc())

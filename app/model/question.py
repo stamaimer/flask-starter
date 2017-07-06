@@ -10,6 +10,8 @@
 """
 
 
+from sqlalchemy.event import listens_for
+
 from . import AppModel, db
 
 
@@ -25,7 +27,7 @@ class Question(AppModel):
     #
     # count_of_d = db.Column(db.Integer())
 
-    status = db.Column(db.Boolean(), default=0)
+    status = db.Column(db.Boolean(), default=1)
 
     memo = db.Column(db.Text())
 
@@ -34,3 +36,13 @@ class Question(AppModel):
     def __repr__(self):
 
         return u"正确答案：{}，备注：{}".format(self.correct_answer, self.memo)
+
+
+@listens_for(Question, "after_insert")
+def change_status_after_insert(mapper, connection, target):
+
+    for question in Question.query.filter(Question.id.isnot(target.id) & Question.status.is_(1)).all():
+
+        question.status = 0
+
+        db.commit()

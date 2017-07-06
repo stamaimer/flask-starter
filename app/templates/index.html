@@ -1,26 +1,56 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="container">
-        <form>
-  <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-  </div>
-  <div class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-  </div>
-  <div class="form-group">
-    <label for="exampleInputFile">File input</label>
-    <input type="file" id="exampleInputFile">
-    <p class="help-block">Example block-level help text here.</p>
-  </div>
-  <div class="checkbox">
-    <label>
-      <input type="checkbox"> Check me out
-    </label>
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
+        {% if current_user.is_authenticated %}
+            <form class="form well" style="max-width: 720px; margin: 0 auto" id="answer">
+                <div class="form-group">
+                    <label for="question_id">题目编号</label>
+                    <input type="text" class="form-control" name="question_id" placeholder="{{ question_id }}" value="{{ question_id }}" disabled>
+                </div>
+                <div class="form-group">
+                    <label>选项</label>
+                    <div>
+                        <div class="radio-inline">
+                            <label><input type="radio" name="answer" id="option1" value="A">A</label>
+                        </div>
+                        <div class="radio-inline">
+                            <label><input type="radio" name="answer" id="option2" value="B">B</label>
+                        </div>
+                        <div class="radio-inline">
+                            <label><input type="radio" name="answer" id="option3" value="C">C</label>
+                        </div>
+                        <div class="radio-inline">
+                            <label><input type="radio" name="answer" id="option4" value="D">D</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
+        {% else %}
+            <div class="alert alert-info" role="alert" style="max-width: 720px; margin: 0 auto">
+                <p>登录后开始答题</p>
+            </div>
+        {% endif %}
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $("#answer").submit(function (event) {
+
+            event.preventDefault();
+
+            var data = JSON.stringify($("#answer").serializeArray());
+
+            console.log(data);
+
+            $.ajax({
+                url : "/answer",
+                type: "POST",
+                data: data,
+                success: alert("success"),
+                failure: alert("failure"),
+                contentType: "application/json; charset=utf-8",
+            });
+        });
+    </script>
 {% endblock %}

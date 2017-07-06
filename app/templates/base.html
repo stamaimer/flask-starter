@@ -9,7 +9,7 @@
 
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+{#        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">#}
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,7 +18,7 @@
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body style="padding-top: 70px">
+    <body style="padding-top: 100px; font-family: 'Microsoft YaHei'">
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -31,10 +31,26 @@
                     <a class="navbar-brand" href="/">在线答题</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbar">
-                    <form class="navbar-form navbar-right">
-                        <a href="{{ url_for_security('login') }}" class="btn btn-success btn-sm" role="button">登录</a>
-                        <a href="{{ url_for_security('register') }}" class="btn btn-default btn-sm" role="button">注册</a>
-                    </form>
+                    {% if current_user.is_authenticated %}
+                        <div class="navbar-text btn-group pull-right">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color: white">
+                                <i class="glyphicon glyphicon-user"></i>
+                                {{ current_user.username }}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                {% if current_user.has_role("admin") %}
+                                    <li><a href="admin">后台</a></li>
+                                {% endif %}
+                                <li><a href="{{ url_for('security.logout', next=request.url) }}">登出</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <form class="navbar-form navbar-right">
+                            <a href="{{ url_for_security('login') }}" class="btn btn-success btn-sm" role="button">登录</a>
+                            <a href="{{ url_for_security('register') }}" class="btn btn-default btn-sm" role="button">注册</a>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
         </nav>
@@ -45,5 +61,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        {% block script %}{% endblock %}
     </body>
 </html>
