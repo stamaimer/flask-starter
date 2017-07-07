@@ -15,6 +15,8 @@ from . import AppModelView
 
 class AnswerModelView(AppModelView):
 
+    can_edit = 0
+
     can_create = 0
 
     column_exclude_list = ["create_datetime", "update_datetime"]
