@@ -14,3 +14,9 @@
 </div>
 {% endif %}
 {% endblock %}
+{% block page_body %}
+    {{ super() }}
+    <footer class="footer" style="position: absolute; bottom: 0; width: 100%;padding-top: 40px; padding-bottom: 40px; margin-top: 40px; border-top: 1px solid #eee;">
+        <div class="container"><p>&copy; <a href="https://github.com/stamaimer">stamaimer</a> 2017</p></div>
+    </footer>
+{% endblock %}
