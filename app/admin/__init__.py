@@ -26,15 +26,13 @@ from app.model import Question
 
 class AppModelView(ModelView):
 
-    # def is_accessible(self):
-    #
-    #     return current_user.has_role("admin")
-    #
-    # def inaccessible_callback(self, name, **kwargs):
-    #
-    #     return redirect(url_for("security.login", next=request.url))
+    def is_accessible(self):
 
-    pass
+        return current_user.has_role("admin")
+
+    def inaccessible_callback(self, name, **kwargs):
+
+        return redirect(url_for("security.login", next=request.url))
 
 
 admin = Admin(name=u"在线答题", base_template="app_master.html", template_mode="bootstrap3")

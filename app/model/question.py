@@ -41,8 +41,6 @@ class Question(AppModel):
 @listens_for(Question, "after_insert")
 def change_status_after_insert(mapper, connection, target):
 
-    for question in Question.query.filter(Question.id.isnot(target.id) & Question.status.is_(1)).all():
+    question = Question.__table__
 
-        question.status = 0
-
-        db.commit()
+    connection.execute(question.update().where((question.c.status == 1) & (question.c.id != target.id)).values(status=0))

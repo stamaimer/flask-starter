@@ -5,22 +5,22 @@
             <form class="form well" style="max-width: 720px; margin: 0 auto" id="answer">
                 <div class="form-group">
                     <label for="question_id">题目编号</label>
-                    <input type="text" class="form-control" name="question_id" placeholder="{{ question_id }}" value="{{ question_id }}" disabled>
+                    <input type="text" class="form-control" name="question_id" placeholder="{{ question_id }}" value="{{ question_id }}">
                 </div>
                 <div class="form-group">
                     <label>选项</label>
                     <div>
                         <div class="radio-inline">
-                            <label><input type="radio" name="answer" id="option1" value="A">A</label>
+                            <label><input type="radio" name="answer" value="A">A</label>
                         </div>
                         <div class="radio-inline">
-                            <label><input type="radio" name="answer" id="option2" value="B">B</label>
+                            <label><input type="radio" name="answer" value="B">B</label>
                         </div>
                         <div class="radio-inline">
-                            <label><input type="radio" name="answer" id="option3" value="C">C</label>
+                            <label><input type="radio" name="answer" value="C">C</label>
                         </div>
                         <div class="radio-inline">
-                            <label><input type="radio" name="answer" id="option4" value="D">D</label>
+                            <label><input type="radio" name="answer" value="D">D</label>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,11 @@
 
             event.preventDefault();
 
-            var data = JSON.stringify($("#answer").serializeArray());
+            var question_id = $("input[name='question_id']").val();
+
+            var answer = $("input[name='answer']").val();
+
+            var data = JSON.stringify({"question_id": question_id, "answer": answer});
 
             console.log(data);
 
@@ -47,8 +51,28 @@
                 url : "/answer",
                 type: "POST",
                 data: data,
-                success: alert("success"),
-                failure: alert("failure"),
+                dataType: "json",
+                success: function (data) {
+
+                    console.log(data["answer_id"]);
+
+                    response = '<div class="alert alert-success alert-dismissible" style="max-width: 720px; margin: 0 auto" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>提交成功</div>';
+
+                    $(".container:last").append(response);
+
+                    $(".alert-success").slideUp(2000);
+
+                },
+                error: function (data) {
+
+                    console.log(data["responseText"]);
+
+                    response = '<div class="alert alert-warning alert-dismissible" style="max-width: 720px; margin: 0 auto" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data["responseText"] + '</div>';
+
+                    $(".container:last").append(response);
+
+                    $(".alert-warning").slideUp(2000);
+                },
                 contentType: "application/json; charset=utf-8",
             });
         });

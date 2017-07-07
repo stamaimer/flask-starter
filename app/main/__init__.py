@@ -44,19 +44,15 @@ def create_answer():
 
     try:
 
-        request_json = request.form
-
-        print request.get_data()
+        request_json = request.get_json()
 
         answer = request_json.get("answer")
 
         question_id = request_json.get("question_id")
 
-        print answer, question_id
-
         question = Question.query.filter_by(status=1).order_by(Question.create_datetime.desc()).first()
 
-        if question.id == question_id:
+        if question.id == int(question_id):
 
             answer = Answer(answer, current_user.id, question_id)
 
