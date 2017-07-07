@@ -41,7 +41,7 @@
 
             var question_id = $("input[name='question_id']").val();
 
-            var answer = $("input[name='answer']").val();
+            var answer = $("input[name='answer']:checked").val();
 
             var data = JSON.stringify({"question_id": question_id, "answer": answer});
 

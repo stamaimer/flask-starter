@@ -52,7 +52,9 @@ def create_answer():
 
         question = Question.query.filter_by(status=1).order_by(Question.create_datetime.desc()).first()
 
-        if question.id == int(question_id):
+        answer__ = Answer.query.filter_by(user_id=current_user.id, question_id=question_id).first()
+
+        if question.id == int(question_id) and not answer__:
 
             answer = Answer(answer, current_user.id, question_id)
 
@@ -64,7 +66,7 @@ def create_answer():
 
         else:
 
-            return "Bad Request", 400
+            return u"当前题目没有开放回答或者不能重复回答问题", 400
 
     except:
 

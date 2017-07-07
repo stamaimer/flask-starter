@@ -35,7 +35,7 @@ class Question(AppModel):
 
     def __repr__(self):
 
-        return u"正确答案：{}，备注：{}".format(self.correct_answer, self.memo)
+        return u"编号：{}，正确答案：{}，备注：{}".format(self.id, self.correct_answer, self.memo)
 
 
 @listens_for(Question, "after_insert")
