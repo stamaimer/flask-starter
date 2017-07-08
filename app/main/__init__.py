@@ -35,7 +35,7 @@ def index():
 
     question = Question.query.filter_by(status=1).order_by(Question.create_datetime.desc()).first()
 
-    return render_template("index.html", question_id=question.id)
+    return render_template("index.html", question_id=question.id if question else "")
 
 
 @main.route("/answer", methods=["POST"])
@@ -52,21 +52,31 @@ def create_answer():
 
         question = Question.query.filter_by(status=1).order_by(Question.create_datetime.desc()).first()
 
-        answer__ = Answer.query.filter_by(user_id=current_user.id, question_id=question_id).first()
+        old_answer = Answer.query.filter_by(user_id=current_user.id, question_id=question_id).first()
 
-        if question.id == int(question_id) and not answer__:
+        if question.id == int(question_id):
 
-            answer = Answer(answer, current_user.id, question_id)
+            if old_answer:
 
-            answer.save()
+                old_answer.answer = answer
 
-            data_dict = dict(answer_id=answer.id)
+                db.session.commit()
+
+                data_dict = dict(answer_id=old_answer.id)
+
+            else:
+
+                new_answer = Answer(answer, current_user.id, question_id)
+
+                new_answer.save()
+
+                data_dict = dict(answer_id=new_answer.id)
 
             return jsonify(data_dict)
 
         else:
 
-            return u"当前题目没有开放回答或者不能重复回答问题", 400
+            return u"当前题目没有开放回答", 400
 
     except:
 
