@@ -17,7 +17,7 @@ from flask import current_app
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-from app.model import db
+from app.model import db, Role, User
 
 from app import create_app, model
 
@@ -51,12 +51,13 @@ def create_user(user, pswd):
             .format(current_app.config["DB_NAME"], current_app.config["DB_USER"], current_app.config["DB_PSWD"]))
 
 
-@manager.command
-def delete_user():
+@manager.option("-u", "--user", dest="user", default="root")
+@manager.option("-p", "--pswd", dest="pswd", default='')
+def delete_user(user, pswd):
 
     with pymysql.connect(host=current_app.config["DB_HOST"],
                          port=current_app.config["DB_PORT"],
-                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"]) as cursor:
+                         user=user, passwd=pswd) as cursor:
 
         cursor.execute("REVOKE ALL PRIVILEGES ON {}.* FROM '{}'@'%'"
                        .format(current_app.config["DB_NAME"], current_app.config["DB_USER"]))
@@ -92,7 +93,25 @@ def resets_db():
 
     create_db()
 
-    db.create_all()
+
+@manager.command
+def fillup_data():
+
+    admin_role = Role("admin", "admin")
+
+    guest_role = Role("guest", "guest")
+
+    admin_role.save()
+
+    guest_role.save()
+
+    admin_user = User("admin@example.com", "admin", "admin", [admin_role])
+
+    guest_user = User("guest@example.com", "guest", "guest", [guest_role])
+
+    admin_user.save()
+
+    guest_user.save()
 
 
 if __name__ == "__main__":
