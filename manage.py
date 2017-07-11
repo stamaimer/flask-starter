@@ -42,112 +42,46 @@ def make_shell_context():
 @manager.command
 def create_user():
 
-    try:
+    with pymysql.connect(host=current_app.config["DB_HOST"],
+                         port=current_app.config["DB_PORT"],
+                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"]) as cursor:
 
-            connection = pymysql.connect(host=current_app.config["DB_HOST"],
-                                         port=current_app.config["DB_PORT"],
-                                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"])
-
-            cursor = connection.cursor()
-
-            cursor.execute("GRANT ALL PRIVILEGES ON {}.* TO '{}'@'%' IDENTIFIED BY '{}'"
-                    .format(current_app.config["DB_NAME"],
-                            current_app.config["DB_USER"],
-                            current_app.config["DB_PSWD"]))
-
-            connection.commit()
-
-    except Exception as e:
-
-        print e.message
-
-    finally:
-
-        cursor.close()
-
-        connection.close()
+        cursor.execute("GRANT ALL PRIVILEGES ON {}.* TO '{}'@'%' IDENTIFIED BY '{}'"
+            .format(current_app.config["DB_NAME"], current_app.config["DB_USER"], current_app.config["DB_PSWD"]))
 
 
 @manager.command
 def delete_user():
 
-    try:
+    with pymysql.connect(host=current_app.config["DB_HOST"],
+                         port=current_app.config["DB_PORT"],
+                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"]) as cursor:
 
-            connection = pymysql.connect(host=current_app.config["DB_HOST"],
-                                         port=current_app.config["DB_PORT"],
-                                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"])
+        cursor.execute("REVOKE ALL PRIVILEGES ON {}.* FROM '{}'@'%'"
+                       .format(current_app.config["DB_NAME"], current_app.config["DB_USER"]))
 
-            cursor = connection.cursor()
-
-            cursor.execute("REVOKE ALL PRIVILEGES ON {}.* FROM '{}'@'%'"
-                           .format(current_app.config["DB_NAME"], current_app.config["DB_USER"]))
-
-            cursor.execute("DROP USER '{}'@'%'".format(current_app.config["DB_USER"]))
-
-            connection.commit()
-
-    except Exception as e:
-
-        print e.message
-
-    finally:
-
-        cursor.close()
-
-        connection.close()
+        cursor.execute("DROP USER '{}'@'%'".format(current_app.config["DB_USER"]))
 
 
 @manager.command
 def delete_db():
 
-    try:
+    with pymysql.connect(host=current_app.config["DB_HOST"],
+                         port=current_app.config["DB_PORT"],
+                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"]) as cursor:
 
-            connection = pymysql.connect(host=current_app.config["DB_HOST"],
-                                         port=current_app.config["DB_PORT"],
-                                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"])
-
-            cursor = connection.cursor()
-
-            cursor.execute("DROP DATABASE IF EXISTS {}".format(current_app.config["DB_NAME"]))
-
-            connection.commit()
-
-    except Exception as e:
-
-        print e.message
-
-    finally:
-
-        cursor.close()
-
-        connection.close()
+        cursor.execute("DROP DATABASE IF EXISTS {}".format(current_app.config["DB_NAME"]))
 
 
 @manager.command
 def create_db():
 
-    try:
+    with pymysql.connect(host=current_app.config["DB_HOST"],
+                         port=current_app.config["DB_PORT"],
+                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"]) as cursor:
 
-            connection = pymysql.connect(host=current_app.config["DB_HOST"],
-                                         port=current_app.config["DB_PORT"],
-                                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"])
-
-            cursor = connection.cursor()
-
-            cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET utf8 COLLATE utf8_general_ci"
-                           .format(current_app.config["DB_NAME"]))
-
-            connection.commit()
-
-    except Exception as e:
-
-        print e.message
-
-    finally:
-
-        cursor.close()
-
-        connection.close()
+        cursor.execute("CREATE DATABASE IF NOT EXISTS {} CHARACTER SET utf8 COLLATE utf8_general_ci"
+                       .format(current_app.config["DB_NAME"]))
 
 
 @manager.command
