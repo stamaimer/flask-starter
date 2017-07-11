@@ -32,6 +32,16 @@ class User(AppModel, UserMixin):
 
     answers = db.relation("Answer", backref="user", lazy="dynamic")
 
+    def __init__(self, email="", username="", password="", roles=None):
+
+        self.email = email
+
+        self.roles = roles
+
+        self.username = username
+
+        self.password = password
+
     def __repr__(self):
 
         return self.username
