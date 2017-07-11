@@ -4,6 +4,8 @@
 
 flask_session
 
+migrations
+
 .DS_Store
 
 *.pyc
