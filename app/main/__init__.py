@@ -54,7 +54,7 @@ def create_answer():
 
         old_answer = Answer.query.filter_by(user_id=current_user.id, question_id=question_id).first()
 
-        if question.id == int(question_id):
+        if question and question.id == int(question_id):
 
             if old_answer:
 
