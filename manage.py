@@ -39,12 +39,13 @@ def make_shell_context():
     return dict(app=manager.app, db=db, model=model)
 
 
-@manager.command
-def create_user():
+@manager.option("-u", "--user", dest="user", default="root")
+@manager.option("-p", "--pswd", dest="pswd", default='')
+def create_user(user, pswd):
 
     with pymysql.connect(host=current_app.config["DB_HOST"],
                          port=current_app.config["DB_PORT"],
-                         user=current_app.config["DB_USER"], passwd=current_app.config["DB_PSWD"]) as cursor:
+                         user=user, passwd=pswd) as cursor:
 
         cursor.execute("GRANT ALL PRIVILEGES ON {}.* TO '{}'@'%' IDENTIFIED BY '{}'"
             .format(current_app.config["DB_NAME"], current_app.config["DB_USER"], current_app.config["DB_PSWD"]))
