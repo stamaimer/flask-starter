@@ -12,6 +12,8 @@
 
 import flask
 
+from flask import render_template
+
 
 main = flask.Blueprint("main", __name__)
 
@@ -20,4 +22,6 @@ main = flask.Blueprint("main", __name__)
 @main.route("/index")
 def index():
 
-    return "Hello, Flask Starter!"
+    # return "Hello, Flask Starter!"
+
+    return render_template("index.html")

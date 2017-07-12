@@ -23,8 +23,8 @@ DB_DRIVER = "pymysql"
 DB_USER = "user"
 DB_PSWD = "pswd"
 DB_HOST = "127.0.0.1"
-DB_PORT = "3306"
-DB_NAME = "flask-starter"
+DB_PORT = 3306
+DB_NAME = "flask_starter"
 
 SQLALCHEMY_DATABASE_URI = "{db}+{db_driver}://{db_user}:{db_pswd}@{db_host}:{db_port}/{db_name}?charset=utf8".format(
     db=DB,

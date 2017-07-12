@@ -16,6 +16,12 @@ class DefaultConfig(object):
 
     SENTRY_USER_ATTRS = ["email", "username"]
 
+    SESSION_TYPE = "filesystem"
+
+    SECURITY_REGISTERABLE = True
+
+    SECURITY_SEND_REGISTER_EMAIL = False
+
     SECURITY_PASSWORD_HASH = "bcrypt"
 
     SECURITY_USER_IDENTITY_ATTRIBUTES = ("email", )  # https://github.com/mattupstate/flask-security/issues/124

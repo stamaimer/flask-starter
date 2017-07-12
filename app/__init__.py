@@ -21,7 +21,8 @@ extensions = [
     "app.extension.cors:cors",
     "app.extension.babel:babel",
     "app.extension.sentry:sentry",
-    "app.extension.migrate:migrate",
+    # "app.extension.migrate:migrate",
+    "app.extension.session:session",
     "app.extension.security:security",
 ]
 

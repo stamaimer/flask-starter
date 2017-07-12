@@ -1,1 +1,25 @@
-{% extends "admin/base.html" %}
+{% extends 'admin/base.html' %}
+{% block head %}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.svg') }}" />
+{% endblock %}
+{% block access_control %}
+    {% if current_user.has_role("admin") %}
+        <div class="navbar-text btn-group pull-right">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                <i class="glyphicon glyphicon-user"></i>
+                {{ current_user.username }}
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="{{ url_for('security.logout', next=request.url) }}">Logout</a></li>
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block page_body %}
+    {{ super() }}
+    <footer class="footer" style="position: absolute; bottom: 0; width: 100%;padding-top: 40px; padding-bottom: 40px; margin-top: 40px; border-top: 1px solid #eee;">
+        <div class="container"><p>&copy; <a href="https://github.com/stamaimer">stamaimer</a> 2017</p></div>
+    </footer>
+{% endblock %}
