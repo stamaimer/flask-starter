@@ -16,6 +16,12 @@ A starter template for Flask based web application.
 
 #### Deployment
 
+    # sudo yum install mariadb-server
+    
+    # sudo mysql_secure_installation
+    
+    # sudo systemctl start/enable/status mariadb
+
     git clone https://github.com/stamaimer/flask-starter
     
     cd flask-starter
@@ -39,6 +45,44 @@ A starter template for Flask based web application.
     python manage.py db upgrade
     
     python manage.py runserver -h 0.0.0.0 or ./start.sh
+    
+    # sudo yum install nginx
+    
+    # sudo systemctl start/enable/status nginx
+    
+    # create sites-available & sites-enabled directory in /etc/nginx 
+    
+    # create config file in sites-available
+    
+        upstream stamaimer {
+            server 127.0.0.1:5000;
+            server 127.0.0.1:5001;
+            server 127.0.0.1:5002;
+        }
+
+        server{
+            listen 80;
+            server_name example.com;
+            
+            location / {
+                proxy_pass http://stamaimer;
+    
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
+            }
+            
+            location /static {
+                alias <path to static directory for your project>;
+                expires max;
+            }
+        }
+        
+    # ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+    
+    # add `include /etc/nginx/sites-enabled/*;` after `include /etc/nginx/conf.d/*.conf;`
+    
+    # sudo systemctl restart nginx
     
 #### To Do
 
