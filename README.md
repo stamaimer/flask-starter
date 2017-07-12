@@ -78,7 +78,7 @@ A starter template for Flask based web application.
             }
         }
         
-    # ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+    # sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
     
     # add `include /etc/nginx/sites-enabled/*;` after `include /etc/nginx/conf.d/*.conf;`
     
