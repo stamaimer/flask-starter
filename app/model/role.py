@@ -22,6 +22,12 @@ class Role(AppModel, RoleMixin):
 
     description = db.Column(db.String(128))
 
+    def __init__(self, name="", description=""):
+
+        self.name = name
+
+        self.description = description
+
     def __repr__(self):
 
         return self.description
