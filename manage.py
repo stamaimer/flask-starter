@@ -26,8 +26,6 @@ app = create_app("config.DefaultConfig")
 
 manager = Manager(app)
 
-# manager.add_option("-c", "--config", dest="config_name", required=True)
-
 migrate = Migrate(app, db)
 
 manager.add_command("db", MigrateCommand)
