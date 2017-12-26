@@ -97,19 +97,27 @@ def fillup_data():
 
     admin_role = Role("admin", "admin")
 
-    guest_role = Role("guest", "guest")
+    expert_role = Role("expert", "expert")
+
+    applyunit_role = Role("applyunit", "applyunit")
+
+    applicant_role = Role("applicant", "applicant")
 
     admin_role.save()
 
-    guest_role.save()
+    expert_role.save()
 
-    admin_user = User("admin@example.com", "admin", "admin", [admin_role])
+    applyunit_role.save()
 
-    guest_user = User("guest@example.com", "guest", "guest", [guest_role])
+    applicant_role.save()
+
+    admin_user = User(None, "138xxxxxxxx", "admin", "admin", [admin_role], "系统管理员", "")
+
+    expert_user = User(None, "139xxxxxxxx", "expert", "expert", [expert_role], "评审专家", "")
 
     admin_user.save()
 
-    guest_user.save()
+    expert_user.save()
 
 
 if __name__ == "__main__":

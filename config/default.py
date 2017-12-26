@@ -24,6 +24,6 @@ class DefaultConfig(object):
 
     SECURITY_PASSWORD_HASH = "bcrypt"
 
-    SECURITY_USER_IDENTITY_ATTRIBUTES = ("email", )  # https://github.com/mattupstate/flask-security/issues/124
+    SECURITY_USER_IDENTITY_ATTRIBUTES = ("username", )  # https://github.com/mattupstate/flask-security/issues/124
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
