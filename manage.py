@@ -95,13 +95,13 @@ def resets_db():
 @manager.command
 def fillup_data():
 
-    admin_role = Role("admin", "admin")
+    admin_role = Role("admin", u"管理人员")
 
-    expert_role = Role("expert", "expert")
+    expert_role = Role("expert", u"评审专家")
 
-    applyunit_role = Role("applyunit", "applyunit")
+    applyunit_role = Role("applyunit", u"申请单位")
 
-    applicant_role = Role("applicant", "applicant")
+    applicant_role = Role("applicant", u"申请人员")
 
     admin_role.save()
 
@@ -111,14 +111,22 @@ def fillup_data():
 
     applicant_role.save()
 
-    admin_user = User(None, "138xxxxxxxx", "admin", "admin", [admin_role], "系统管理员", "")
+    admin_user = User("138xxxxxxxx", "admin", "123456", [admin_role], u"管理人员", "")
 
-    expert_user = User(None, "139xxxxxxxx", "expert", "expert", [expert_role], "评审专家", "")
+    expert_user = User("139xxxxxxxx", "expert", "123456", [expert_role], u"评审专家", "")
+
+    applyunit_user = User("137xxxxxxxx", "applyunit", "123456", [applyunit_role], u"申请单位", u"联系地址")
+
+    applicant_user = User("136xxxxxxxx", "applicant", "123456", [applicant_role], u"申请人员", u"申请单位")
 
     admin_user.save()
 
     expert_user.save()
 
+    applyunit_user.save()
+
+    applicant_user.save()
+    
 
 if __name__ == "__main__":
 

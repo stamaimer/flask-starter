@@ -39,6 +39,11 @@ class RoleModelView(AppModelView):
     pass
 
 
+class UserModelView(AppModelView):
+
+    pass
+
+
 class ApplyUnitModelView(AppModelView):
 
     def is_accessible(self):
@@ -89,5 +94,6 @@ admin = Admin(name=u"课题网申", base_template="app_master.html", template_mo
 
 
 admin.add_view(RoleModelView(Role, db.session, name=u"角色管理"))
+admin.add_view(UserModelView(User, db.session, name=u"用户管理"))
 admin.add_view(ApplyUnitModelView(User, db.session, name=u"申请单位管理", endpoint="applyunit"))
 admin.add_view(ApplicantModelView(User, db.session, name=u"申请人员管理", endpoint="applicant"))

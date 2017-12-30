@@ -22,11 +22,11 @@ class AppModel(db.Model):
 
     __abstract__ = True
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True)
 
-    create_datetime = db.Column(db.DateTime, default=func.now())
+    create_datetime = db.Column(db.DateTime(), default=func.now())
 
-    update_datetime = db.Column(db.DateTime, default=func.now())
+    update_datetime = db.Column(db.DateTime(), default=func.now())
 
     def save(self):
 
@@ -46,3 +46,5 @@ roles_users = db.Table("roles_users",
 
 from .role import Role
 from .user import User
+from .audit import Audit
+from .project import Project

@@ -20,7 +20,7 @@ from . import AppModel
 
 class User(AppModel, UserMixin):
 
-    email = db.Column(db.String(128), unique=True)
+    email = db.Column(db.String(128))
 
     phone = db.Column(db.String(128), unique=True, nullable=False)
 
@@ -36,9 +36,7 @@ class User(AppModel, UserMixin):
 
     roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users", lazy="dynamic"))
 
-    def __init__(self, email="", phone="", username="", password="", roles=[], displayname="", description=""):
-
-        self.email = email
+    def __init__(self, phone="", username="", password="", roles=[], displayname="", description=""):
 
         self.phone = phone
 
