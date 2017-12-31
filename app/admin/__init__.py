@@ -17,6 +17,7 @@ from flask_security import current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.sqla.view import func
+from flask_admin.model.template import EndpointLinkRowAction
 
 from app.model import db
 from app.model import Role
@@ -42,7 +43,7 @@ class RoleModelView(AppModelView):
 
 class UserModelView(AppModelView):
 
-    pass
+    column_exclude_list = ["email", "password", "update_datetime"]
 
 
 class ApplyUnitModelView(AppModelView):
@@ -69,7 +70,7 @@ class ApplyUnitModelView(AppModelView):
 
     form_excluded_columns = ["create_datetime", "update_datetime", "active", "email", "roles"]
 
-    labels = dict(username=u"登陆账号", password=u"密码", displayname=u"申请单位", description=u"联系地址", phone=u"联系方式", roles=u"账号类型")
+    labels = dict(username=u"登陆账号", password=u"密码", displayname=u"申请单位", description=u"联系地址", phone=u"联系方式")
 
     column_labels = labels
 
@@ -100,7 +101,7 @@ class ApplicantModelView(AppModelView):
 
     form_excluded_columns = ["create_datetime", "update_datetime", "description", "active", "email", "roles"]
 
-    labels = dict(username=u"登陆账号", password=u"密码", displayname=u"姓名", description=u"单位名称", phone=u"联系方式", roles=u"账号类型")
+    labels = dict(username=u"登陆账号", password=u"密码", displayname=u"姓名", description=u"单位名称", phone=u"联系方式")
 
     column_labels = labels
 
@@ -125,12 +126,16 @@ class ProjectModelViewForApplyUnit(AppModelView):
 
             model.create_user = current_user
 
+    column_extra_row_actions = [
+        EndpointLinkRowAction("glyphicon glyphicon-send", "main.submit")
+    ]
+
     column_exclude_list = ["create_user", "update_datetime", "current_audit"]
 
     form_excluded_columns = ["create_user", "create_datetime", "update_datetime", "current_audit"]
 
-    labels = dict(current_audit=u"审批流程", create_datetime=u"创建时间", update_datetime=u"修改时间", pro_name=u"项目名称", pro_type=u"项目类别",
-                sub_type=u"学科分类", pro_time=u"起止时间", res_type=u"研究类型", res_form=u"预期成果", keywords=u"主题词", status=u"状态")
+    labels = dict(create_datetime=u"创建时间", pro_name=u"项目名称", pro_type=u"项目类别", sub_type=u"学科分类", 
+    pro_time=u"起止时间", res_type=u"研究类型", res_form=u"预期成果", keywords=u"主题词", status=u"状态")
 
     column_labels = labels
 

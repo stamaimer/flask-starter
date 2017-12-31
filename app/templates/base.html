@@ -21,7 +21,7 @@
         <![endif]-->
     </head>
     <body style="padding-top: 100px;">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
+        <!-- <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -41,9 +41,7 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                {% if current_user.has_role("admin") %}
                                     <li><a href="admin">Dashboard</a></li>
-                                {% endif %}
                                 <li><a href="{{ url_for('security.logout', next=request.url) }}">Logout</a></li>
                             </ul>
                         </div>
@@ -55,13 +53,13 @@
                     {% endif %}
                 </div>
             </div>
-        </nav>
+        </nav> -->
 
         {% block content %}{% endblock %}
 
-        <footer class="footer" style="position: absolute; bottom: 0; width: 100%;padding-top: 40px; padding-bottom: 40px; margin-top: 40px; border-top: 1px solid #eee;">
+        <!-- <footer class="footer" style="position: absolute; bottom: 0; width: 100%;padding-top: 40px; padding-bottom: 40px; margin-top: 40px; border-top: 1px solid #eee;">
             <div class="container"><p>&copy; <a href="https://github.com/stamaimer">stamaimer</a> 2017</p></div>
-        </footer>
+        </footer> -->
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="{{ url_for("static", filename="scripts/jquery.min.js") }}"></script>

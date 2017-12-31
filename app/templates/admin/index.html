@@ -1,0 +1,9 @@
+{% extends "admin/master.html" %}
+{% block body %}
+    {{ super() }}
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('security.logout', next=request.url) }}" class="btn btn-primary">登出</a>
+    {% else %}
+        <a href="{{ url_for('security.login', next=request.url) }}" class="btn btn-primary">登录</a>
+    {% endif %}
+{% endblock body %}

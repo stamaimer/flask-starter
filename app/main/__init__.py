@@ -12,7 +12,9 @@
 
 import flask
 
-from flask import render_template
+from flask import redirect
+
+from flask_security import login_required
 
 
 main = flask.Blueprint("main", __name__)
@@ -22,6 +24,17 @@ main = flask.Blueprint("main", __name__)
 @main.route("/index")
 def index():
 
-    # return "Hello, Flask Starter!"
+    return redirect("/admin")
 
-    return render_template("index.html")
+
+@main.route("/submit/<int:id>")
+@login_required
+def submit(id):
+
+    return "<html>" \
+           "    <head>" \
+           "        <script>" \
+           "            history.go(-1);" \
+           "        </script>" \
+           "    </head>" \
+           "</html>"

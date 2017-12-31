@@ -33,7 +33,7 @@ class Project(AppModel):
 
     create_user = db.relationship("User", foreign_keys=create_user_id)
 
-    status = db.Column(db.Enum(u"审批中", u"已驳回", u"已通过"), default=u"审批中")
+    status = db.Column(db.Enum(u"创建中", u"审批中", u"已驳回", u"已通过"), default=u"创建中")
 
     current_audit_id = db.Column(db.Integer(), db.ForeignKey("audit.id"))
 
