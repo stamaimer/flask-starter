@@ -59,9 +59,15 @@ class ApplyUnitModelView(AppModelView):
 
         return self.session.query(func.count('*')).select_from(self.model).filter(self.model.roles.any(name="applyunit"))
 
+    def on_model_change(self, form, model, is_created):
+
+        if is_created:
+
+            model.roles = [Role.query.filter_by(name="applyunit").first()]
+
     column_list = ["username", "displayname", "description", "phone"]
 
-    form_excluded_columns = ["create_datetime", "update_datetime", "active", "email"]
+    form_excluded_columns = ["create_datetime", "update_datetime", "active", "email", "roles"]
 
     labels = dict(username=u"登陆账号", password=u"密码", displayname=u"申请单位", description=u"联系地址", phone=u"联系方式", roles=u"账号类型")
 
@@ -76,15 +82,23 @@ class ApplicantModelView(AppModelView):
 
     def get_query(self):
 
-        return self.session.query(self.model).filter(self.model.roles.any(name="applicant"))
+        return self.session.query(self.model).filter(self.model.roles.any(name="applicant"), self.model.description==current_user.displayname)
 
     def get_count_query(self):
 
-        return self.session.query(func.count('*')).select_from(self.model).filter(self.model.roles.any(name="applicant"))
+        return self.session.query(func.count('*')).select_from(self.model).filter(self.model.roles.any(name="applicant"), self.model.description==current_user.displayname)
+
+    def on_model_change(self, form, model, is_created):
+
+        if is_created:
+
+            model.roles = [Role.query.filter_by(name="applicant").first()]
+
+            model.description = current_user.displayname
 
     column_list = ["username", "displayname", "description", "phone"]
 
-    form_excluded_columns = ["create_datetime", "update_datetime", "active", "email"]
+    form_excluded_columns = ["create_datetime", "update_datetime", "description", "active", "email", "roles"]
 
     labels = dict(username=u"登陆账号", password=u"密码", displayname=u"姓名", description=u"单位名称", phone=u"联系方式", roles=u"账号类型")
 
@@ -105,9 +119,15 @@ class ProjectModelViewForApplyUnit(AppModelView):
 
         return self.session.query(func.count('*')).select_from(self.model).filter_by(create_user_id=current_user.id)
 
-    form_excluded_columns = ["create_datetime", "update_datetime", "current_audit"]
+    def on_model_change(self, form, model, is_created):
 
-    column_list = ["create_datetime", "pro_name", "pro_type", "sub_type", "pro_time", "res_type", "res_form", "keywords", "status"]
+        if is_created:
+
+            model.create_user = current_user
+
+    column_exclude_list = ["create_user", "update_datetime", "current_audit"]
+
+    form_excluded_columns = ["create_user", "create_datetime", "update_datetime", "current_audit"]
 
     labels = dict(current_audit=u"审批流程", create_datetime=u"创建时间", update_datetime=u"修改时间", pro_name=u"项目名称", pro_type=u"项目类别",
                 sub_type=u"学科分类", pro_time=u"起止时间", res_type=u"研究类型", res_form=u"预期成果", keywords=u"主题词", status=u"状态")
