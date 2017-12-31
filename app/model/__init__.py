@@ -46,5 +46,5 @@ roles_users = db.Table("roles_users",
 
 from .role import Role
 from .user import User
-from .audit import Audit
 from .project import Project
+from .audit import Audit

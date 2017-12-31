@@ -91,6 +91,8 @@ def resets_db():
 
     create_db()
 
+    db.create_all()
+
 
 @manager.command
 def fillup_data():
