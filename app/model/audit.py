@@ -32,5 +32,5 @@ class Audit(AppModel):
 
     project_id = db.Column(db.Integer(), db.ForeignKey("project.id"))
 
-    project = db.relationship("Project", foreign_keys=project_id)
+    project = db.relationship("Project", foreign_keys=project_id, backref="audits")
     

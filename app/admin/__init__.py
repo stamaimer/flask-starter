@@ -22,6 +22,7 @@ from flask_admin.model.template import EndpointLinkRowAction
 from app.model import db
 from app.model import Role
 from app.model import User
+from app.model import Audit
 from app.model import Project
 
 
@@ -106,7 +107,7 @@ class ApplicantModelView(AppModelView):
     column_labels = labels
 
 
-class ProjectModelViewForApplyUnit(AppModelView):
+class ProjectModelViewForApplicant(AppModelView):
 
     def is_accessible(self):
 
@@ -132,9 +133,31 @@ class ProjectModelViewForApplyUnit(AppModelView):
 
     column_exclude_list = ["create_user", "update_datetime", "current_audit"]
 
-    form_excluded_columns = ["create_user", "create_datetime", "update_datetime", "current_audit"]
+    form_excluded_columns = ["create_user", "create_datetime", "update_datetime", "current_audit", "audits"]
 
     labels = dict(create_datetime=u"创建时间", pro_name=u"项目名称", pro_type=u"项目类别", sub_type=u"学科分类", 
+    pro_time=u"起止时间", res_type=u"研究类型", res_form=u"预期成果", keywords=u"主题词", status=u"状态")
+
+    column_labels = labels
+
+    # inline_models = [(Audit, dict(form_columns=["id", "advice", "result"]))]
+
+
+class ProjectModelViewForApplyUnit(AppModelView):
+
+    can_edit = 0
+
+    can_create = 0
+
+    can_delete = 0
+
+    def is_accessible(self):
+
+        return current_user.has_role("applyunit")
+
+    column_exclude_list = ["update_datetime", "current_audit"]
+
+    labels = dict(create_user=u"创建人员", create_datetime=u"创建时间", pro_name=u"项目名称", pro_type=u"项目类别", sub_type=u"学科分类", 
     pro_time=u"起止时间", res_type=u"研究类型", res_form=u"预期成果", keywords=u"主题词", status=u"状态")
 
     column_labels = labels
@@ -147,4 +170,5 @@ admin.add_view(RoleModelView(Role, db.session, name=u"角色管理"))
 admin.add_view(UserModelView(User, db.session, name=u"用户管理"))
 admin.add_view(ApplyUnitModelView(User, db.session, name=u"申请单位管理", endpoint="applyunit"))
 admin.add_view(ApplicantModelView(User, db.session, name=u"申请人员管理", endpoint="applicant"))
-admin.add_view(ProjectModelViewForApplyUnit(Project, db.session, name=u"项目创建"))
+admin.add_view(ProjectModelViewForApplicant(Project, db.session, name=u"项目创建", endpoint="project4c"))
+admin.add_view(ProjectModelViewForApplyUnit(Project, db.session, name=u"项目审批", endpoint="project4u"))
