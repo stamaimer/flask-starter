@@ -58,6 +58,8 @@ def submit(id):
 
             st1_audit.save()
 
+            project.current_audit = st1_audit
+
             db.session.commit()
 
             return "<html>" \

@@ -155,6 +155,20 @@ class ProjectModelViewForApplyUnit(AppModelView):
 
         return current_user.has_role("applyunit")
 
+    def get_query(self):
+
+        return self.session.query(self.model).filter(Audit.audit_user==current_user,
+                                                     Audit.result==None,
+                                                     Audit.status==1,
+                                                     Project.status==u"审批中").join(Project.current_audit)
+
+    def get_count_query(self):
+
+        return self.session.query(func.count('*')).select_from(self.model).filter(Audit.audit_user==current_user,
+                                                                                  Audit.result==None,
+                                                                                  Audit.status==1,
+                                                                                  Project.status==u"审批中").join(Project.current_audit)
+
     column_exclude_list = ["update_datetime", "current_audit"]
 
     labels = dict(create_user=u"创建人员", create_datetime=u"创建时间", pro_name=u"项目名称", pro_type=u"项目类别", sub_type=u"学科分类", 
