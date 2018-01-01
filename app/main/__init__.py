@@ -85,3 +85,11 @@ def submit(id):
         current_app.logger.error(traceback.format_exc())
 
         abort(500, traceback.format_exc())
+
+
+@main.route("/audit/<int:id>")
+@login_required
+def audit(id):
+
+    pass
+    
