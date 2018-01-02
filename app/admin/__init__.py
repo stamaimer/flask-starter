@@ -248,11 +248,11 @@ class ProjectModelViewForApplicant(AppModelView):
 
     def _list_charge_person(view, context, model, name):
 
-        charge_person = ChargePerson.query.filter_by(project_id=model.id)
+        charge_person = ChargePerson.query.filter_by(project_id=model.id).first()
 
         row = "<tr>"
 
-        for attr in ["name", "gender", "ethnic", "birth", "duty", "title", "research", "edt", "degree", "phone", "work", "email", "addr", "zip"]:
+        for attr in ["name", "gender", "ethnic", "birth", "duty", "title", "research", "edu", "degree", "phone", "work", "email", "addr", "zip"]:
 
             data = getattr(charge_person, attr)
 
@@ -260,7 +260,7 @@ class ProjectModelViewForApplicant(AppModelView):
 
         row += "</tr>"
 
-        return Markup("<table class='table'><tr><th>姓名</th><th>性别</th><th>民族</th><th>出生年月</th><th>行政职务</th><th>专业职称</th><th>研究专长</th><th>最后学历</th><th>最后学位</th><th>联系电话</th><th>工作单位</th><th>Email</th><th>通讯地址</th><th>邮政编码</th></tr>%s</table>".decode("utf-8") % rows)
+        return Markup("<table class='table'><tr><th>姓名</th><th>性别</th><th>民族</th><th>出生年月</th><th>行政职务</th><th>专业职称</th><th>研究专长</th><th>最后学历</th><th>最后学位</th><th>联系电话</th><th>工作单位</th><th>Email</th><th>通讯地址</th><th>邮政编码</th></tr>%s</table>".decode("utf-8") % row)
 
     column_formatters = {
         "audit_process": _list_audit_process,
@@ -277,7 +277,7 @@ class ProjectModelViewForApplicant(AppModelView):
     ]
 
     column_details_list = ["create_datetime", "pro_name", "pro_type", "sub_type", "pro_time", "res_type", "res_form", "keywords", "status", 
-    "audit_process", "charge_person", "recommenders", "participants", "phased_results", "final_results", "budgets", "other_source_of_funding", "funding_management_unit"]
+    "charge_person", "recommenders", "participants", "phased_results", "final_results", "budgets", "other_source_of_funding", "funding_management_unit", "audit_process"]
 
     column_exclude_list = ["create_user", "update_datetime", "current_audit", "other_source_of_funding", "funding_management_unit"]
 
@@ -285,7 +285,7 @@ class ProjectModelViewForApplicant(AppModelView):
 
     labels = dict(create_datetime=u"创建时间", pro_name=u"项目名称", pro_type=u"项目类别", sub_type=u"学科分类", 
     pro_time=u"起止时间", res_type=u"研究类型", res_form=u"预期成果", keywords=u"主题词", word_counts=u"字数", status=u"状态", 
-    audit_process=u"审批流程", recommenders=u"推荐人", participants=u"参加者", phased_results=u"阶段性成果", final_results=u"最终成果", 
+    audit_process=u"审批意见", recommenders=u"推荐人", participants=u"参加者", phased_results=u"阶段性成果", final_results=u"最终成果", 
     budgets=u"项目经费预算", other_source_of_funding=u"其他经费来源", funding_management_unit=u"经费管理单位", charge_person=u"负责人")
 
     column_labels = labels
@@ -299,7 +299,7 @@ class ProjectModelViewForApplicant(AppModelView):
 
 
 
-class ProjectModelViewForApplyUnit(AppModelView):
+class ProjectModelViewForApplyUnit(ProjectModelViewForApplicant):
 
     can_edit = 0
 
@@ -327,133 +327,150 @@ class ProjectModelViewForApplyUnit(AppModelView):
                                                                                   Audit.status==1,
                                                                                   Project.status==u"审批中").join(Project.current_audit)
 
-    def _list_audit_process(view, context, model, name):
+    # def _list_audit_process(view, context, model, name):
 
-        audits = Audit.query.filter_by(project_id=model.id, status=1)\
-            .order_by(Audit.update_datetime).all()
+    #     audits = Audit.query.filter_by(project_id=model.id, status=1)\
+    #         .order_by(Audit.update_datetime).all()
 
-        return Markup("<br />".join(["<pre>" + item.__repr__() + "</pre>" for item in audits]))
+    #     return Markup("<br />".join(["<pre>" + item.__repr__() + "</pre>" for item in audits]))
 
-    def _list_recommenders(view, context, model, name):
+    # def _list_recommenders(view, context, model, name):
 
-        recommenders = Recommender.query.filter_by(project_id=model.id).order_by(Recommender.create_datetime).all()
+    #     recommenders = Recommender.query.filter_by(project_id=model.id).order_by(Recommender.create_datetime).all()
 
-        rows = ''
+    #     rows = ''
 
-        for recommender in recommenders:
+    #     for recommender in recommenders:
 
-            rows += "<tr>"
+    #         rows += "<tr>"
 
-            for attr in ["name", "work", "title", "advice"]:
+    #         for attr in ["name", "work", "title", "advice"]:
 
-                rows += "<td>" + getattr(recommender, attr) + "</td>"
+    #             rows += "<td>" + getattr(recommender, attr) + "</td>"
 
-            rows += "</tr>"
+    #         rows += "</tr>"
 
-        return Markup("<table class='table'><tr><th>姓名</th><th>工作单位</th><th>专业职称</th><th>意见</th></tr>%s</table>".decode("utf-8") % rows)
+    #     return Markup("<table class='table'><tr><th>姓名</th><th>工作单位</th><th>专业职称</th><th>意见</th></tr>%s</table>".decode("utf-8") % rows)
 
-    def _list_participants(view, context, model, name):
+    # def _list_participants(view, context, model, name):
 
-        participants = Participant.query.filter_by(project_id=model.id).order_by(Participant.create_datetime).all()
+    #     participants = Participant.query.filter_by(project_id=model.id).order_by(Participant.create_datetime).all()
 
-        rows = ''
+    #     rows = ''
 
-        for participant in participants:
+    #     for participant in participants:
 
-            rows += "<tr>"
+    #         rows += "<tr>"
 
-            for attr in ["name", "gender", "birth", "title", "research", "edu", "degree", "work"]:
+    #         for attr in ["name", "gender", "birth", "title", "research", "edu", "degree", "work"]:
 
-                data = getattr(participant, attr)
+    #             data = getattr(participant, attr)
 
-                rows += "<td>" + (str(data) if type(data) is date else data) + "</td>"
+    #             rows += "<td>" + (str(data) if type(data) is date else data) + "</td>"
 
-            rows += "</tr>"
+    #         rows += "</tr>"
 
-        return Markup("<table class='table'><tr><th>姓名</th><th>性别</th><th>出生年月</th><th>专业职称</th><th>研究专长</th><th>学历</th><th>学位</th><th>工作单位</th></tr>%s</table>".decode("utf-8") % rows)
+    #     return Markup("<table class='table'><tr><th>姓名</th><th>性别</th><th>出生年月</th><th>专业职称</th><th>研究专长</th><th>学历</th><th>学位</th><th>工作单位</th></tr>%s</table>".decode("utf-8") % rows)
 
-    def _list_phased_results(view, context, model, name):
+    # def _list_phased_results(view, context, model, name):
 
-        phased_results = PhasedResult.query.filter_by(project_id=model.id)
+    #     phased_results = PhasedResult.query.filter_by(project_id=model.id)
 
-        rows = ''
+    #     rows = ''
 
-        for phased_result in phased_results:
+    #     for phased_result in phased_results:
 
-            rows += "<tr>"
+    #         rows += "<tr>"
 
-            for attr in ["name", "phase", "form", "bearer"]:
+    #         for attr in ["name", "phase", "form", "bearer"]:
 
-                rows += "<td>" + getattr(phased_result, attr) + "</td>"
+    #             rows += "<td>" + getattr(phased_result, attr) + "</td>"
 
-            rows += "</tr>"
+    #         rows += "</tr>"
 
-        return Markup("<table class='table'><tr><th>成果名称</th><th>研究阶段</th><th>成果形式</th><th>承担人</th></tr>%s</table>".decode("utf-8") % rows)
+    #     return Markup("<table class='table'><tr><th>成果名称</th><th>研究阶段</th><th>成果形式</th><th>承担人</th></tr>%s</table>".decode("utf-8") % rows)
 
-    def _list_final_results(view, context, model, name):
+    # def _list_final_results(view, context, model, name):
 
-        final_results = FinalResult.query.filter_by(project_id=model.id)
+    #     final_results = FinalResult.query.filter_by(project_id=model.id)
 
-        rows = ''
+    #     rows = ''
 
-        for final_result in final_results:
+    #     for final_result in final_results:
 
-            rows += "<tr>"
+    #         rows += "<tr>"
 
-            for attr in ["name", "time", "form", "word", "bearer"]:
+    #         for attr in ["name", "time", "form", "word", "bearer"]:
 
-                data = getattr(final_result, attr)
+    #             data = getattr(final_result, attr)
 
-                rows += "<td>" + (str(data) if type(data) is date else data) + "</td>"
+    #             rows += "<td>" + (str(data) if type(data) is date else data) + "</td>"
 
-            rows += "</tr>"
+    #         rows += "</tr>"
 
-        return Markup("<table class='table'><tr><th>成果名称</th><th>完成时间</th><th>成果形式</th><th>预计字数</th><th>完成人</th></tr>%s</table>".decode("utf-8") % rows)
+    #     return Markup("<table class='table'><tr><th>成果名称</th><th>完成时间</th><th>成果形式</th><th>预计字数</th><th>完成人</th></tr>%s</table>".decode("utf-8") % rows)
 
-    def _list_budgets(view, context, model, name):
+    # def _list_budgets(view, context, model, name):
 
-        budgets = Budget.query.filter_by(project_id=model.id)
+    #     budgets = Budget.query.filter_by(project_id=model.id)
 
-        rows = ''
+    #     rows = ''
 
-        for budget in budgets:
+    #     for budget in budgets:
 
-            rows += "<tr>"
+    #         rows += "<tr>"
 
-            for attr in ["name", "description", "amount"]:
+    #         for attr in ["name", "description", "amount"]:
 
-                data = getattr(budget, attr)
+    #             data = getattr(budget, attr)
 
-                rows += "<td>" + (str(data) if type(data) is int else data) + "</td>"
+    #             rows += "<td>" + (str(data) if type(data) is int else data) + "</td>"
 
-            rows += "</tr>"
+    #         rows += "</tr>"
 
-        return Markup("<table class='table'><tr><th>经费开支科目</th><th>预算经费</th><th>金额（元）</th></tr>%s</table>".decode("utf-8") % rows)
+    #     return Markup("<table class='table'><tr><th>经费开支科目</th><th>预算经费</th><th>金额（元）</th></tr>%s</table>".decode("utf-8") % rows)
 
-    column_formatters = {
-        "audit_process": _list_audit_process,
-        "recommenders": _list_recommenders,
-        "participants": _list_participants,
-        "phased_results": _list_phased_results,
-        "final_results": _list_final_results,
-        "budgets": _list_budgets
-    }
+    # def _list_charge_person(view, context, model, name):
+
+    #     charge_person = ChargePerson.query.filter_by(project_id=model.id).first()
+
+    #     row = "<tr>"
+
+    #     for attr in ["name", "gender", "ethnic", "birth", "duty", "title", "research", "edu", "degree", "phone", "work", "email", "addr", "zip"]:
+
+    #         data = getattr(charge_person, attr)
+
+    #         row += "<td>" + (str(data) if type(data) is date else data) + "</td>"
+
+    #     row += "</tr>"
+
+    #     return Markup("<table class='table'><tr><th>姓名</th><th>性别</th><th>民族</th><th>出生年月</th><th>行政职务</th><th>专业职称</th><th>研究专长</th><th>最后学历</th><th>最后学位</th><th>联系电话</th><th>工作单位</th><th>Email</th><th>通讯地址</th><th>邮政编码</th></tr>%s</table>".decode("utf-8") % row)
+
+    # column_formatters = {
+    #     "audit_process": _list_audit_process,
+    #     "recommenders": _list_recommenders,
+    #     "participants": _list_participants,
+    #     "phased_results": _list_phased_results,
+    #     "final_results": _list_final_results,
+    #     "budgets": _list_budgets,
+    #     "charge_person": _list_charge_person
+    # }
 
     column_extra_row_actions = [
         EndpointLinkRowAction("glyphicon glyphicon-filter", "main.show_audit")
     ]
 
-    column_details_list = ["create_datetime", "pro_name", "pro_type", "sub_type", "pro_time", "res_type", "res_form", "keywords", "status", 
-    "audit_process", "recommenders", "participants", "phased_results", "final_results", "budgets", "other_source_of_funding", "funding_management_unit"]
+    # column_details_list = ["create_datetime", "pro_name", "pro_type", "sub_type", "pro_time", "res_type", "res_form", "keywords", "status", 
+    # "charge_person", "recommenders", "participants", "phased_results", "final_results", "budgets", "other_source_of_funding", "funding_management_unit", "audit_process"]
 
-    column_exclude_list = ["update_datetime", "current_audit", "other_source_of_funding", "funding_management_unit"]
+    # column_exclude_list = ["update_datetime", "current_audit", "other_source_of_funding", "funding_management_unit"]
 
-    labels = dict(create_user=u"创建人员", create_datetime=u"创建时间", pro_name=u"项目名称", pro_type=u"项目类别", sub_type=u"学科分类", 
-    pro_time=u"起止时间", res_type=u"研究类型", res_form=u"预期成果", keywords=u"主题词", word_counts=u"字数", status=u"状态",
-    audit_process=u"审批流程", recommenders=u"推荐人", participants=u"参加者", phased_results=u"阶段性成果", final_results=u"最终成果", 
-    budgets=u"项目经费预算", other_source_of_funding=u"其他经费来源", funding_management_unit=u"经费管理单位")
+    # labels = dict(create_user=u"创建人员", create_datetime=u"创建时间", pro_name=u"项目名称", pro_type=u"项目类别", sub_type=u"学科分类", 
+    # pro_time=u"起止时间", res_type=u"研究类型", res_form=u"预期成果", keywords=u"主题词", word_counts=u"字数", status=u"状态",
+    # audit_process=u"审批意见", recommenders=u"推荐人", participants=u"参加者", phased_results=u"阶段性成果", final_results=u"最终成果", 
+    # budgets=u"项目经费预算", other_source_of_funding=u"其他经费来源", funding_management_unit=u"经费管理单位", charge_person=u"负责人")
 
-    column_labels = labels
+    # column_labels = labels
 
 
 admin = Admin(name=u"课题网申", base_template="app_master.html", template_mode="bootstrap3")

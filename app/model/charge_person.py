@@ -45,6 +45,6 @@ class ChargePerson(AppModel):
 
     project_id = db.Column(db.Integer(), db.ForeignKey("project.id"))
 
-    project = db.relationship("Project", foreign_keys=project_id, backref=db.backref("charge_person", , uselist=0))
+    project = db.relationship("Project", foreign_keys=project_id, backref="charge_person")
 
 
