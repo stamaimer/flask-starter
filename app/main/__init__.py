@@ -14,9 +14,11 @@ import traceback
 
 import flask
 
-from flask import abort, current_app, redirect
+from sqlalchemy.sql import func
 
-from flask_security import login_required
+from flask import abort, current_app, redirect, render_template, request
+
+from flask_security import current_user, login_required
 
 from app.model import db
 from app.model.user import User
@@ -89,7 +91,85 @@ def submit(id):
 
 @main.route("/audit/<int:id>")
 @login_required
-def audit(id):
+def show_audit(id):
 
-    pass
+    try:
+
+        project = Project.query.get(id)
+
+        audit = Audit.query.filter_by(audit_user=current_user, project_id=id).first()
+
+        if project.status == u"审批中" and project.current_audit == audit and audit.status == 1 and audit.result is None:
     
+            return render_template("audit.html", id=audit.id)
+
+        else:
+
+            return "<html>" \
+                   "    <head>" \
+                   "        <script>" \
+                   "            alert('您现在没有权限审批当前项目！');location.replace(document.referrer);" \
+                   "        </script>" \
+                   "    </head>" \
+                   "</html>"
+
+    except:
+
+        current_app.logger.error(traceback.format_exc())
+
+        abort(500, traceback.format_exc())
+
+
+@main.route("/audit", methods=["POST"])
+@login_required
+def update_audit():
+
+    try:
+
+        id = request.form.get("id")
+
+        audit = Audit.query.get(id)
+
+        result = request.form.get("result")
+
+        advice = request.form.get("advice")
+
+        if audit.audit_user == current_user:
+
+            audit.result = result
+
+            audit.advice = advice
+
+            audit.update_datetime = func.now()
+
+            if result == u"同意":
+
+                if audit._next_:
+
+                    audit._next_.status = 1
+
+                    audit.project.current_audit = audit._next_
+
+                else:
+
+                    audit.project.status = u"已通过"
+
+            if result == u"驳回":
+
+                audit.project.status = u"已驳回"
+
+            db.session.commit()
+
+            return redirect("/admin")
+
+        else:
+
+            return "Unauthorized", 401
+
+    except:
+
+        db.session.rollback()
+
+        current_app.logger.error(traceback.format_exc())
+
+        abort(500, traceback.format_exc())

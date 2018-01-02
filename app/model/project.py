@@ -29,6 +29,14 @@ class Project(AppModel):
 
     keywords = db.Column(db.String(128), nullable=False)
 
+    word_counts = db.Column(db.String(128), nullable=False)
+
+    other_source_of_funding = db.Column(db.String(128), nullable=False)
+
+    funding_management_unit = db.Column(db.String(128), nullable=False)
+
+    # path = db.Column(db.String(128))
+
     create_user_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
 
     create_user = db.relationship("User", foreign_keys=create_user_id)

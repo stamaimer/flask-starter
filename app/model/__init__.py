@@ -46,5 +46,11 @@ roles_users = db.Table("roles_users",
 
 from .role import Role
 from .user import User
-from .project import Project
 from .audit import Audit
+from .budget import Budget
+from .project import Project
+from .recommender import Recommender
+from .participant import Participant
+from .final_result import FinalResult
+from .phased_result import PhasedResult
+from .charge_person import ChargePerson
