@@ -35,7 +35,7 @@ class Project(AppModel):
 
     funding_management_unit = db.Column(db.String(128), nullable=False)
 
-    # path = db.Column(db.String(128))
+    path = db.Column(db.String(128))
 
     create_user_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
 
