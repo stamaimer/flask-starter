@@ -13,13 +13,18 @@
 from datetime import date
 from jinja2 import Markup
 
-from flask import redirect, request, url_for
+from flask import flash, redirect, request, url_for
 
 from flask_security import current_user
 
 from flask_admin import Admin, form
+from flask_admin.base import expose
+from flask_admin.form import FormOpts
+from flask_admin.babel import gettext
+from flask_admin.helpers import get_redirect_target
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.sqla.view import func
+from flask_admin.model.helpers import get_mdict_item_or_list
 from flask_admin.model.template import EndpointLinkRowAction
 
 from app.model import db
@@ -138,6 +143,95 @@ class ProjectModelViewForApplicant(AppModelView):
     def get_count_query(self):
 
         return self.session.query(func.count('*')).select_from(self.model).filter_by(create_user_id=current_user.id)
+
+    @expose('/edit/', methods=('GET', 'POST'))
+    def edit_view(self):
+        """
+            Edit model view
+        """
+        return_url = get_redirect_target() or self.get_url('.index_view')
+
+        if not self.can_edit:
+            return redirect(return_url)
+
+        id = get_mdict_item_or_list(request.args, 'id')
+        if id is None:
+            return redirect(return_url)
+
+        model = self.get_one(id)
+
+        if model is None:
+            flash(gettext('Record does not exist.'), 'error')
+            return redirect(return_url)
+
+        if model.status != u"创建中":
+            flash(u"当前项目已经提交审批，不能编辑", "error")
+            return redirect(return_url)
+
+        form = self.edit_form(obj=model)
+        if not hasattr(form, '_validated_ruleset') or not form._validated_ruleset:
+            self._validate_form_instance(ruleset=self._form_edit_rules, form=form)
+
+        if self.validate_form(form):
+            if self.update_model(form, model):
+                flash(gettext('Record was successfully saved.'), 'success')
+                if '_add_another' in request.form:
+                    return redirect(self.get_url('.create_view', url=return_url))
+                elif '_continue_editing' in request.form:
+                    return redirect(request.url)
+                else:
+                    # save button
+                    return redirect(self.get_save_return_url(model, is_created=False))
+
+        if request.method == 'GET' or form.errors:
+            self.on_form_prefill(form, id)
+
+        form_opts = FormOpts(widget_args=self.form_widget_args,
+                             form_rules=self._form_edit_rules)
+
+        if self.edit_modal and request.args.get('modal'):
+            template = self.edit_modal_template
+        else:
+            template = self.edit_template
+
+        return self.render(template,
+                           model=model,
+                           form=form,
+                           form_opts=form_opts,
+                           return_url=return_url)
+
+    @expose("/delete/", methods=("POST", ))
+    def delete_view(self):
+
+        return_url = get_redirect_target() or self.get_url('.index_view')
+
+        if not self.can_delete:
+            return redirect(return_url)
+
+        form = self.delete_form()
+
+        if self.validate_form(form):
+            # id is InputRequired()
+            id = form.id.data
+
+            model = self.get_one(id)
+
+            if model is None:
+                flash(gettext('Record does not exist.'), 'error')
+                return redirect(return_url)
+
+            if model.status != u"创建中":
+                flash(u"当前项目已经提交审批，不能删除", "error")
+                return redirect(return_url)
+
+            # message is flashed from within delete_model if it fails
+            if self.delete_model(model):
+                flash(gettext('Record was successfully deleted.'), 'success')
+                return redirect(return_url)
+        else:
+            flash_errors(form, message='Failed to delete record. %(error)s')
+
+        return redirect(return_url)
 
     def on_model_change(self, form, model, is_created):
 
@@ -274,6 +368,10 @@ class ProjectModelViewForApplicant(AppModelView):
 
         return Markup("<a href='%s'>%s</a>" % (url_for("static", filename= "files/" + model.path), model.path))
 
+    def namegen(obj, file_data):
+
+        return file_data.filename
+
     column_formatters = {
         "audit_process": _list_audit_process,
         "recommenders": _list_recommenders,
@@ -297,7 +395,8 @@ class ProjectModelViewForApplicant(AppModelView):
         'path': {
             'label': u'附件',
             'base_path': "app/static/files",
-            'allow_overwrite': False
+            'allow_overwrite': False,
+            'namegen': namegen
         }
     }
 
@@ -305,6 +404,12 @@ class ProjectModelViewForApplicant(AppModelView):
     "charge_person", "recommenders", "participants", "phased_results", "final_results", "budgets", "other_source_of_funding", "funding_management_unit", "audit_process"]
 
     column_exclude_list = ["create_user", "update_datetime", "current_audit", "other_source_of_funding", "funding_management_unit", "path"]
+
+    column_searchable_list = ["pro_name", "pro_type", "pro_time", "sub_type", "res_type", "keywords", "status"]
+
+    column_filters = column_searchable_list
+
+    column_export_exclude_list = ["create_user", "current_audit", "update_datetime", "path"]
 
     form_excluded_columns = ["create_user", "create_datetime", "update_datetime", "current_audit", "audits", "status"]
 
@@ -314,8 +419,6 @@ class ProjectModelViewForApplicant(AppModelView):
     budgets=u"项目经费预算", other_source_of_funding=u"其他经费来源", funding_management_unit=u"经费管理单位", charge_person=u"负责人")
 
     column_labels = labels
-
-    column_export_exclude_list = ["create_user", "current_audit", "update_datetime", "path"]
 
     inline_models = [(ChargePerson, dict(form_columns=["id", "name", "gender", "ethnic", "birth", "duty", "title", "research", "edu", "degree", "phone", "work", "email", "addr", "zip"], column_labels=dict(name=u"姓名", gender=u"性别", ethnic=u"民族", birth=u"出生日期", duty=u"行政职务", title=u"专业职称", research=u"研究专长", edu=u"最后学历", degree=u"最后学位", phone=u"联系方式", work=u"工作单位", email=u"Email", addr=u"通讯地址", zip=u"邮政编码"))),
     (Recommender, dict(form_columns=["id", "name", "work", "title", "advice"], column_labels=dict(name=u"姓名", work=u"工作单位", title=u"专业职称", advice=u"意见"))),
@@ -344,9 +447,9 @@ class ProjectModelViewForApplyUnit(ProjectModelViewForApplicant):
 
         return self.session.query(self.model).join(Audit, Audit.audit_user==current_user)
 
-    def get_count_query(self):
+    # def get_count_query(self):
 
-        return self.session.query(func.count('*')).select_from(self.model).join(Audit, Audit.audit_user==current_user)
+    #     return self.session.query(func.count('*')).select_from(self.model).join(Audit, Audit.audit_user==current_user)
 
     column_extra_row_actions = [
         EndpointLinkRowAction("glyphicon glyphicon-filter", "main.show_audit")
