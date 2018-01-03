@@ -38,11 +38,11 @@ class Audit(AppModel):
 
         if self.result:
 
-            return self.audit_user.username + u"\t已于 " + self.update_datetime.__str__() + ' ' \
+            return self.audit_user.displayname + u"\t已于 " + self.update_datetime.__str__() + ' ' \
                        + self.result + "\t" + (self.advice if self.advice else "")
 
         else:
 
-            return u"等待 " + self.audit_user.username + u" 审批"
+            return u"等待 " + self.audit_user.displayname + u" 审批"
         
     

@@ -165,7 +165,7 @@ class ProjectModelViewForApplicant(AppModelView):
             return redirect(return_url)
 
         if model.status != u"创建中":
-            flash(u"当前项目已经提交审批，不能编辑", "error")
+            flash(u"当前项目%s，不能编辑" % model.status, "error")
             return redirect(return_url)
 
         form = self.edit_form(obj=model)
@@ -221,7 +221,7 @@ class ProjectModelViewForApplicant(AppModelView):
                 return redirect(return_url)
 
             if model.status != u"创建中":
-                flash(u"当前项目已经提交审批，不能删除", "error")
+                flash(u"当前项目%s，不能删除" % model.status, "error")
                 return redirect(return_url)
 
             # message is flashed from within delete_model if it fails
