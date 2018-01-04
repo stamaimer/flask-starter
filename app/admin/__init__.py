@@ -21,9 +21,9 @@ from flask_admin import Admin, form
 from flask_admin.base import expose
 from flask_admin.form import FormOpts
 from flask_admin.babel import gettext
-from flask_admin.helpers import get_redirect_target
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.sqla.view import func
+from flask_admin.helpers import get_redirect_target
 from flask_admin.model.helpers import get_mdict_item_or_list
 from flask_admin.model.template import EndpointLinkRowAction
 
@@ -75,10 +75,6 @@ class ApplyUnitModelView(AppModelView):
             "query_factory": filter_func
         }
     }
-
-    # def on_model_change(self, form, model, is_created):
-    #     if is_created:
-    #         model.roles = [Role.query.filter_by(name="applyunit").first()]
 
     column_list = ["username", "displayname", "description", "phone"]
 
@@ -202,7 +198,9 @@ class ProjectModelViewForApplicant(AppModelView):
 
     @expose("/delete/", methods=("POST", ))
     def delete_view(self):
-
+        """
+            Delete model view. Only POST method is allowed.
+        """
         return_url = get_redirect_target() or self.get_url('.index_view')
 
         if not self.can_delete:
@@ -395,7 +393,7 @@ class ProjectModelViewForApplicant(AppModelView):
         'path': {
             'label': u'附件',
             'base_path': "app/static/files",
-            'allow_overwrite': False,
+            'allow_overwrite': 0,
             'namegen': namegen
         }
     }
@@ -436,8 +434,6 @@ class ProjectModelViewForApplyUnit(ProjectModelViewForApplicant):
     can_create = 0
 
     can_delete = 0
-
-    can_view_details = 1
 
     def is_accessible(self):
 
