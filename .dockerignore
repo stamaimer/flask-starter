@@ -1,0 +1,8 @@
+.env
+.git
+.idea
+.venv
+.vscode
+**/*.pyc
+migrations
+flask_session

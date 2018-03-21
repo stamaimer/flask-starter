@@ -10,7 +10,7 @@
 """
 
 
-from default import DefaultConfig
-from develop import DevelopConfig
-from product import ProductConfig
-from testing import TestingConfig
+from config.default import DefaultConfig
+from config.develop import DevelopConfig
+from config.product import ProductConfig
+from config.testing import TestingConfig

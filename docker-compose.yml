@@ -1,0 +1,45 @@
+version: "3"
+services:
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    networks:
+      - backend
+    volumes:
+      - mysql:/var/lib/mysql
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  flask-starter:
+    image: stamaimer/flask-starter
+    ports:
+      - "5000:5000"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    networks:
+      - backend
+    depends_on:
+      - db
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  mysql:
+    

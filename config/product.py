@@ -10,7 +10,7 @@
 """
 
 
-from default import DefaultConfig
+from config.default import DefaultConfig
 
 
 class ProductConfig(DefaultConfig):
