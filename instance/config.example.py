@@ -22,7 +22,7 @@ DB_DRIVER = "pymysql"
 
 DB_USER = "user"
 DB_PSWD = "pswd"
-DB_HOST = "mysql"
+DB_HOST = "db"
 DB_PORT = 3306
 DB_NAME = "flask_starter"
 

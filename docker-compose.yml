@@ -5,23 +5,20 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    networks:
-      - backend
-    volumes:
-      - mysql:/var/lib/mysql
+      MYSQL_ROOT_PASSWORD: 123456
     deploy:
       placement:
         constraints: [node.role == manager]
+
 
   flask-starter:
     image: stamaimer/flask-starter
     ports:
       - "5000:5000"
+    volumes:
+      - .:/flask-starter
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    networks:
-      - backend
+      MYSQL_ROOT_PASSWORD: 123456
     depends_on:
       - db
 
@@ -34,12 +31,4 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
-    networks:
-      - backend
-
-networks:
-  backend:
-
-volumes:
-  mysql:
     
