@@ -84,8 +84,12 @@ A starter template for Flask based web application.
     
     # sudo systemctl restart nginx
     
+#### Deployment with Docker
+    - git clone https://github.com/stamaimer/flask-starter
+    - cd flask-starter
+    - docker-compose up
+
 #### To Do
 
 - Test
-- Docker
     
