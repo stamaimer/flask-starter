@@ -1,4 +1,4 @@
-/flask-starter/wait-for-it.sh db:3306
+/flask-starter/wait-for-it.sh db:3306 -t 30
 python manage.py create_user -p $MYSQL_ROOT_PASSWORD
 python manage.py create_db
 python manage.py db init
